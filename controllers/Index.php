@@ -141,6 +141,13 @@ class Index extends Controller
 
         $formWidget = $this->makeObjectFormWidget($type, $object, Request::input('formWidgetAlias'));
 
+        /*
+         * Extensibility
+         * Provides opportunity to modify a page or content before it is saved
+         */
+        Event::fire('pages.object.fillObject', [$this, $object, &$objectData, $type]);
+        $this->fireEvent('object.fillObject', [$object, &$objectData, $type]);
+
         return ObjectHelper::fillObject(
             $this->theme,
             $type,
